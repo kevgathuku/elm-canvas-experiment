@@ -1,67 +1,31 @@
-import Html exposing (..)
---import Html.Attributes exposing (..)
---import Html.Events exposing (onClick)
+module Main exposing (..)
+
+import Html exposing (Html)
+import Canvas exposing (Size, Point, Canvas, DrawOp(..))
+import Color
 
 
-main : Program Never Model Msg
+main : Html a
 main =
-    Html.program
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
+    Canvas.toHtml [] blueRectangle
 
 
-
--- MODEL
-
-
-type alias Model =
-    {}
-
-
-initialModel : Model
-initialModel =
-    {}
-
-
-init : ( Model, Cmd Msg )
-init =
-    ( initialModel, Cmd.none )
+blueRectangle : Canvas
+blueRectangle =
+    let
+        size : Size
+        size =
+            { width = 400
+            , height = 300
+            }
+    in
+        Canvas.initialize size
+            |> Canvas.draw (fillBlue size)
 
 
-
--- UPDATE
-
-
-type Msg
-    = NoOp
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        NoOp ->
-            ( model, Cmd.none )
-
-
-
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none
-
-
-
--- VIEW
-
-
-view : Model -> Html Msg
-view model =
-    div []
-        [ text "Hello, world!"
-        , text (toString model)
-        ]
+fillBlue : Size -> DrawOp
+fillBlue size =
+    [ FillStyle Color.blue
+    , FillRect (Point 0 0) size
+    ]
+        |> Canvas.batch
